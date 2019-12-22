@@ -9,6 +9,8 @@ vector<bool> visited;
 vector<int> OpenTable;
 vector<int> CloseTable;
 
+void print_OpenTable();
+void print_CloseTable();
 
 bool test_edge(int start, int end)
 {
@@ -31,19 +33,8 @@ void BFS(int i)
 	q.push_back(i);
 	OpenTable.push_back(i);
 	
-	cout<<"Open Table:";
-	for(int j=0;j<OpenTable.size();j++)
-	{
-		cout<<OpenTable[j]<<" ";
-	}
-	cout<<endl;
-	
-	cout<<"Close Table:";
-	for(int j=0;j<CloseTable.size();j++)
-	{
-		cout<<CloseTable[j]<<" ";
-	}
-	cout<<endl;
+	print_OpenTable();
+	print_CloseTable();
 
 	while(q.size()!=0)
 	{
@@ -61,22 +52,14 @@ void BFS(int i)
 				q.push_back(j);
 				OpenTable.push_back(j);
 				
-				cout<<"Open Table:";
-				for(int k=0;k<OpenTable.size();k++)
-				{
-					cout<<OpenTable[k]<<" ";
-				}
-				cout<<endl;
-				
-				cout<<"Close Table:";
-				for(int k=0;k<CloseTable.size();k++)
-				{
-					cout<<CloseTable[k]<<" ";
-				}
-				cout<<endl;
+				print_OpenTable();
+				print_CloseTable();
 			}
 		}
 	}
+	
+	print_OpenTable();
+	print_CloseTable();
 }
 
 
@@ -100,8 +83,43 @@ void BFSTraverse()
 	}
 }
 
+void print_OpenTable()
+{
+	cout<<"Open Table:";
+	
+	if(OpenTable.size()==0)
+	{
+		cout<<"Empty!";
+	}
+	else
+	{
+		for(int i=0;i<OpenTable.size();i++)
+		{
+			cout<<OpenTable[i]<<" ";
+		}
+	}
+	
+	
+	cout<<endl;
+}
 
-
+void print_CloseTable()
+{
+	cout<<"Close Table:";
+	
+	if(CloseTable.size()==0)
+	{
+		cout<<"Empty!";
+	}
+	else
+	{
+		for(int i=0;i<CloseTable.size();i++)
+		{
+			cout<<CloseTable[i]<<" ";
+		}
+	}
+	cout<<endl<<endl;
+}
 
 
 int main()
