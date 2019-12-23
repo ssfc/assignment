@@ -3,10 +3,14 @@
 using namespace std;
 
 
-int num_v; // number of vertices
+int num_v;
 vector<bool> adjacency_matrix;
 vector<bool> visited;
+vector<int> OpenTable;
+vector<int> CloseTable;
 
+void print_OpenTable();
+void print_CloseTable();
 
 bool test_edge(int start, int end)
 {
@@ -18,24 +22,79 @@ bool test_edge(int start, int end)
 	return flag;
 }
 
-// DFS one range;
-void DFS(int i)
+
+// BFS one range;
+void BFS(int i)
 {
-	visited[i-1] = true;
-	cout<<i<<" ";
-	for(int j=1;j<=num_v;j++)
+	visited[i-1] = true;	
+
+	vector<int> q;
+	cout<<"Current Node:"<<i<<" "<<endl;	
+	q.push_back(i);
+	OpenTable.push_back(i);
+	
+	cout<<"q:";
+	for(int k=0;k<q.size();k++)
 	{
-		if((test_edge(i, j)==true)&&(visited[j-1]==false))
+		cout<<q[k]<<" ";
+	}
+	cout<<endl;
+	print_OpenTable();
+	print_CloseTable();
+
+	int current = -1;
+	while(!q.empty())
+	{
+		current = q.back();		
+		
+
+		bool flag = false; 
+		for(int j=1;j<=num_v;j++)
 		{
-			DFS(j);
+			if((test_edge(current, j) == true)&&(visited[j-1]==false))
+			{
+				visited[j-1] = true;
+				cout<<"Current Node:"<<j<<" "<<endl;
+				q.push_back(j);
+				OpenTable.push_back(j);
+				
+				cout<<"q:";
+				for(int k=0;k<q.size();k++)
+				{
+					cout<<q[k]<<" ";
+				}
+				cout<<endl;
+				print_OpenTable();
+				print_CloseTable();
+				
+				flag = true;
+				break;
+			}
+		}
+		
+		if(flag==false)
+		{
+			q.pop_back();
+			OpenTable.pop_back();
+			CloseTable.push_back(current);
 		}
 	}
-
+	
+	cout<<"q:";
+	for(int k=0;k<q.size();k++)
+	{
+		cout<<q[k]<<" ";
+	}
+	cout<<endl;
+	print_OpenTable();
+	print_CloseTable();
+	
 }
 
 
-// DFS all map;
-void DFSTraverse()
+
+// BFS all map;
+void BFSTraverse()
 {
 	// initialize visited matrix;
 	for(int i=1;i<=num_v;i++)
@@ -48,28 +107,64 @@ void DFSTraverse()
 	{
 		if(visited[i-1]==false)
 		{
-			DFS(i);
+			BFS(i);
 		}
 	}
 }
 
+void print_OpenTable()
+{
+	cout<<"Open Table:";
+	
+	if(OpenTable.size()==0)
+	{
+		cout<<"Empty!";
+	}
+	else
+	{
+		for(int i=0;i<OpenTable.size();i++)
+		{
+			cout<<OpenTable[i]<<" ";
+		}
+	}
+	
+	
+	cout<<endl;
+}
+
+void print_CloseTable()
+{
+	cout<<"Close Table:";
+	
+	if(CloseTable.size()==0)
+	{
+		cout<<"Empty!";
+	}
+	else
+	{
+		for(int i=0;i<CloseTable.size();i++)
+		{
+			cout<<CloseTable[i]<<" ";
+		}
+	}
+	cout<<endl<<endl;
+}
 
 
 int main()
-{	
-    cout<<"Input number of node and number of edge in the first line, input each edge in the following line."<<endl; 
-
-	int N;
-	cin>>N;
-	num_v = N;	
-	int M; //  number of edges
+{
+	cout<<"Input number of node and number of edge in the first line, input each edge in the following line."<<endl; 
+	
+	int N; // number of vertices
+	cin>>N;	
+	num_v = N;
+	int M; //  number of edges	
 	cin>>M;
 
 	// create adjacency matrix;
-	adjacency_matrix.resize(N*N);
 	for(int i=0;i<N*N;i++)
 	{
-		adjacency_matrix[i] = false;
+		adjacency_matrix.push_back(false);
 	}
 
 	// save current amp in adjacency matrix;
@@ -80,9 +175,12 @@ int main()
 		int end;
 		cin>>end;
 
-		adjacency_matrix[(start-1)*num_v + (end-1)] = true;
-		adjacency_matrix[(start-1) + (end-1)*num_v] = true;
+		adjacency_matrix[(start-1)*N + (end-1)] = true;
+		adjacency_matrix[(start-1) + (end-1)*N] = true;
 	}
+
+//	cout<<test_edge(2, 1)<<endl;
+//	cout<<test_edge(2, 4)<<endl;
 
 	// generate visited point;
 	visited.resize(N);
@@ -93,8 +191,9 @@ int main()
 
 
 
-//	DFS(5); // test DFS one range;
-	DFSTraverse();
+//	BFS(1); // test BFS one range;
+	BFSTraverse();
+
 
 
 	return 0;
@@ -107,4 +206,3 @@ int main()
 3 4
 2 5
 */
-
