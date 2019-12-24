@@ -17,35 +17,26 @@ bool test_edge(int start, int end)
 	bool flag = false;
 
 	if(adjacency_matrix[(start-1)*num_v+(end-1)]==true)    flag = true;
-	if(adjacency_matrix[(start-1)+(end-1)*num_v]==true)    flag = true;
 
 	return flag;
 }
 
 
-// BFS one range;
-void BFS(int i)
+// DFS one range;
+void DFS(int i)
 {
 	visited[i-1] = true;	
 
-	vector<int> q;
 	cout<<"Current Node:"<<i<<" "<<endl;	
-	q.push_back(i);
 	OpenTable.push_back(i);
 	
-	cout<<"q:";
-	for(int k=0;k<q.size();k++)
-	{
-		cout<<q[k]<<" ";
-	}
-	cout<<endl;
 	print_OpenTable();
 	print_CloseTable();
 
 	int current = -1;
-	while(!q.empty())
+	while(!OpenTable.empty())
 	{
-		current = q.back();		
+		current = OpenTable.back();		
 		
 
 		bool flag = false; 
@@ -55,15 +46,8 @@ void BFS(int i)
 			{
 				visited[j-1] = true;
 				cout<<"Current Node:"<<j<<" "<<endl;
-				q.push_back(j);
 				OpenTable.push_back(j);
 				
-				cout<<"q:";
-				for(int k=0;k<q.size();k++)
-				{
-					cout<<q[k]<<" ";
-				}
-				cout<<endl;
 				print_OpenTable();
 				print_CloseTable();
 				
@@ -74,42 +58,14 @@ void BFS(int i)
 		
 		if(flag==false)
 		{
-			q.pop_back();
 			OpenTable.pop_back();
 			CloseTable.push_back(current);
+			
+			print_OpenTable();
+			print_CloseTable();
 		}
 	}
 	
-	cout<<"q:";
-	for(int k=0;k<q.size();k++)
-	{
-		cout<<q[k]<<" ";
-	}
-	cout<<endl;
-	print_OpenTable();
-	print_CloseTable();
-	
-}
-
-
-
-// BFS all map;
-void BFSTraverse()
-{
-	// initialize visited matrix;
-	for(int i=1;i<=num_v;i++)
-	{
-		visited[i-1] = false;
-	}
-
-
-	for(int i=1;i<=num_v;i++)
-	{
-		if(visited[i-1]==false)
-		{
-			BFS(i);
-		}
-	}
 }
 
 void print_OpenTable()
@@ -176,7 +132,6 @@ int main()
 		cin>>end;
 
 		adjacency_matrix[(start-1)*N + (end-1)] = true;
-		adjacency_matrix[(start-1) + (end-1)*N] = true;
 	}
 
 //	cout<<test_edge(2, 1)<<endl;
@@ -191,8 +146,7 @@ int main()
 
 
 
-//	BFS(1); // test BFS one range;
-	BFSTraverse();
+	DFS(1); // test DFS one range;
 
 
 
@@ -200,9 +154,17 @@ int main()
 }
 
 /*
-6 4
+6 8
 1 2
 1 6
-3 4
-2 5
+2 3
+2 4
+3 5
+4 5
+4 6
+5 6
 */
+
+
+
+
