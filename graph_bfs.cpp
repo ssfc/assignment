@@ -27,25 +27,16 @@ void BFS(int i)
 {
 	visited[i-1] = true;	
 
-	vector<int> q;
-	cout<<"Current Node:"<<i<<" "<<endl;	
-	q.push_back(i);
+//	cout<<"Current Node:"<<i<<" "<<endl;	
 	OpenTable.push_back(i);
 	
-	cout<<"q:";
-	for(int k=0;k<q.size();k++)
-	{
-		cout<<q[k]<<" ";
-	}
-	cout<<endl;
 	print_OpenTable();
 	print_CloseTable();
 
 	int current = -1;
-	while(!q.empty())
+	while(!OpenTable.empty())
 	{
-		current = q.front();
-		q.erase(q.begin());
+		current = OpenTable.front();
 		OpenTable.erase(OpenTable.begin());
 		CloseTable.push_back(current);
 		
@@ -57,16 +48,10 @@ void BFS(int i)
 			if((test_edge(current, j) == true)&&(visited[j-1]==false))
 			{
 				visited[j-1] = true;
-				cout<<"Current Node:"<<j<<" "<<endl;
-				q.push_back(j);
+//				cout<<"Current Node:"<<j<<" "<<endl;
 				OpenTable.push_back(j);
 				
-				cout<<"q:";
-				for(int k=0;k<q.size();k++)
-				{
-					cout<<q[k]<<" ";
-				}
-				cout<<endl;
+
 				print_OpenTable();
 				print_CloseTable();
 			}
@@ -75,26 +60,6 @@ void BFS(int i)
 	
 }
 
-
-
-// BFS all map;
-void BFSTraverse()
-{
-	// initialize visited matrix;
-	for(int i=1;i<=num_v;i++)
-	{
-		visited[i-1] = false;
-	}
-
-
-	for(int i=1;i<=num_v;i++)
-	{
-		if(visited[i-1]==false)
-		{
-			BFS(i);
-		}
-	}
-}
 
 void print_OpenTable()
 {
