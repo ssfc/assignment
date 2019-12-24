@@ -28,7 +28,7 @@ void DFS(int i)
 	visited[i-1] = true;	
 
 	cout<<"Current Node:"<<i<<" "<<endl;	
-	OpenTable.push_back(i);
+    OpenTable.insert(OpenTable.begin(), i);
 	
 	print_OpenTable();
 	print_CloseTable();
@@ -36,9 +36,8 @@ void DFS(int i)
 	int current = -1;
 	while(!OpenTable.empty())
 	{
-		current = OpenTable.back();		
+		current = OpenTable.front();	
 		
-
 		bool flag = false; 
 		for(int j=1;j<=num_v;j++)
 		{
@@ -46,7 +45,7 @@ void DFS(int i)
 			{
 				visited[j-1] = true;
 				cout<<"Current Node:"<<j<<" "<<endl;
-				OpenTable.push_back(j);
+				OpenTable.insert(OpenTable.begin(), j);
 				
 				print_OpenTable();
 				print_CloseTable();
@@ -58,7 +57,7 @@ void DFS(int i)
 		
 		if(flag==false)
 		{
-			OpenTable.pop_back();
+			OpenTable.erase(OpenTable.begin());
 			CloseTable.push_back(current);
 			
 			print_OpenTable();
