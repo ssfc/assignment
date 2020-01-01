@@ -9,6 +9,7 @@ vector<bool> visited;
 vector<int> OpenTable;
 vector<int> CloseTable;
 
+
 struct Node
 {
 	int key;
@@ -18,10 +19,12 @@ struct Node
 
 vector<Node> tree;
 vector<int> result;
+vector<int> sequence;
 
-
+void print_SearchTree();
 void print_OpenTable();
 void print_CloseTable();
+void tree_bfs(int root);
 
 bool test_edge(int start, int end)
 {
@@ -40,8 +43,10 @@ bool DFS(int source, int goal)
 	tree[source-1].level = 0;
 
 //	cout<<"Current Node:"<<source<<" "<<endl;	
+    result.push_back(source);
     OpenTable.insert(OpenTable.begin(), source);
 	
+	print_SearchTree();
 	print_OpenTable();
 	print_CloseTable();
 
@@ -56,18 +61,21 @@ bool DFS(int source, int goal)
 			if((test_edge(current, j) == true)&&(visited[j-1]==false))
 			{				
 				visited[j-1] = true;
-				cout<<"Current Node:"<<j<<" "<<endl;
+//				cout<<"Current Node:"<<j<<" "<<endl;
+                result.push_back(j);
                 tree[current-1].child.push_back(j);
 				tree[j-1].level = tree[current-1].level + 1;
 				
 				if(j==goal)
 				{
 					cout<<"We find goal:"<<j<<endl;
+					print_SearchTree();
 					return true;
 				}
                 
 				OpenTable.insert(OpenTable.begin(), j);
 				
+				print_SearchTree();
 				print_OpenTable();
 				print_CloseTable();
 				
@@ -81,6 +89,7 @@ bool DFS(int source, int goal)
 			OpenTable.erase(OpenTable.begin());
 			CloseTable.push_back(current);
 			
+			print_SearchTree();
 			print_OpenTable();
 			print_CloseTable();
 		}
@@ -89,6 +98,56 @@ bool DFS(int source, int goal)
 	cout<<"Not found!"<<endl;
 	return false;
 	
+}
+
+
+void tree_bfs(int root)
+{  
+    sequence.resize(0);
+
+    if (root == -1)
+	{  
+        return;  
+    }  
+
+	vector<int> q;  
+    q.push_back(root);
+
+    while (!q.empty())
+	{
+		int current = q[0];
+		q.erase(q.begin());
+		
+		sequence.push_back(current); 
+
+		if(tree[current-1].child.size()>0)
+		{
+			for(int i=0;i<tree[current-1].child.size();i++)
+			{
+				q.push_back(tree[current-1].child[i]);
+			}
+		}
+
+    }
+
+    return;
+} 
+
+
+void print_SearchTree()
+{
+	cout<<"Search tree: "<<endl;
+	
+	tree_bfs(1);
+	
+	for(int i=0;i<sequence.size();i++)
+	{
+		cout<<sequence[i]<<" ";
+	}
+	
+	cout<<endl;
+	
+	return;
 }
 
 void print_OpenTable()
@@ -191,8 +250,10 @@ int main()
 		}
 		cout<<endl;
 	}
-
-
+	
+	cout<<endl;
+	print_SearchTree();
+	cout<<endl;
 
 	return 0;
 }
