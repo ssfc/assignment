@@ -17,57 +17,91 @@ bool test_edge(int start, int end)
 	bool flag = false;
 
 	if(adjacency_matrix[(start-1)*num_v+(end-1)]==true)    flag = true;
+	if(adjacency_matrix[(start-1)+(end-1)*num_v]==true)    flag = true;
 
 	return flag;
 }
 
 
 // BFS one range;
-bool BFS(int source, int goal)
+void BFS(int i)
 {
-	visited[source-1] = true;	
+	visited[i-1] = true;	
 
-//	cout<<"Current Node:"<<i<<" "<<endl;	
-	OpenTable.push_back(source);
+	vector<int> q;
+	cout<<"Current Node:"<<i<<" "<<endl;	
+	q.push_back(i);
+	OpenTable.push_back(i);
 	
+	cout<<"q:";
+	for(int k=0;k<q.size();k++)
+	{
+		cout<<q[k]<<" ";
+	}
+	cout<<endl;
 	print_OpenTable();
 	print_CloseTable();
 
 	int current = -1;
-	while(!OpenTable.empty())
+	while(!q.empty())
 	{
-		current = OpenTable.front();
+		current = q.front();
+		q.erase(q.begin());
 		OpenTable.erase(OpenTable.begin());
 		CloseTable.push_back(current);
-		
-		print_OpenTable();
-		print_CloseTable();
 
 		for(int j=1;j<=num_v;j++)
 		{
 			if((test_edge(current, j) == true)&&(visited[j-1]==false))
 			{
-				if(j==goal)
-				{
-					cout<<"We find goal:"<<j<<endl;
-					return true;
-				}
-				
 				visited[j-1] = true;
-//				cout<<"Current Node:"<<j<<" "<<endl;
+				cout<<"Current Node:"<<j<<" "<<endl;
+				q.push_back(j);
 				OpenTable.push_back(j);
 				
-
+				cout<<"q:";
+				for(int k=0;k<q.size();k++)
+				{
+					cout<<q[k]<<" ";
+				}
+				cout<<endl;
 				print_OpenTable();
 				print_CloseTable();
 			}
 		}
 	}
 	
-	cout<<"Not found!"<<endl;
-	return false;
+	cout<<"q:";
+	for(int k=0;k<q.size();k++)
+	{
+		cout<<q[k]<<" ";
+	}
+	cout<<endl;
+	print_OpenTable();
+	print_CloseTable();
+	
 }
 
+
+
+// BFS all map;
+void BFSTraverse()
+{
+	// initialize visited matrix;
+	for(int i=1;i<=num_v;i++)
+	{
+		visited[i-1] = false;
+	}
+
+
+	for(int i=1;i<=num_v;i++)
+	{
+		if(visited[i-1]==false)
+		{
+			BFS(i);
+		}
+	}
+}
 
 void print_OpenTable()
 {
@@ -133,6 +167,7 @@ int main()
 		cin>>end;
 
 		adjacency_matrix[(start-1)*N + (end-1)] = true;
+		adjacency_matrix[(start-1) + (end-1)*N] = true;
 	}
 
 //	cout<<test_edge(2, 1)<<endl;
@@ -147,7 +182,8 @@ int main()
 
 
 
-	BFS(1, 5); // test BFS one range;
+//	BFS(1); // test BFS one range;
+	BFSTraverse();
 
 
 
@@ -155,14 +191,9 @@ int main()
 }
 
 /*
-6 8
+6 4
 1 2
 1 6
-2 3
-2 4
-3 5
-4 5
-4 6
-5 6
+3 4
+2 5
 */
-

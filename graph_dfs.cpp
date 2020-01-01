@@ -23,12 +23,12 @@ bool test_edge(int start, int end)
 
 
 // DFS one range;
-void DFS(int i)
+bool DFS(int source, int goal)
 {
-	visited[i-1] = true;	
+	visited[source-1] = true;	
 
-	cout<<"Current Node:"<<i<<" "<<endl;	
-    OpenTable.insert(OpenTable.begin(), i);
+//	cout<<"Current Node:"<<source<<" "<<endl;	
+    OpenTable.insert(OpenTable.begin(), source);
 	
 	print_OpenTable();
 	print_CloseTable();
@@ -43,8 +43,15 @@ void DFS(int i)
 		{
 			if((test_edge(current, j) == true)&&(visited[j-1]==false))
 			{
+				if(j==goal)
+				{
+					cout<<"We find goal:"<<j<<endl;
+					return true;
+				}
+				
+				
 				visited[j-1] = true;
-				cout<<"Current Node:"<<j<<" "<<endl;
+//				cout<<"Current Node:"<<j<<" "<<endl;
 				OpenTable.insert(OpenTable.begin(), j);
 				
 				print_OpenTable();
@@ -64,6 +71,9 @@ void DFS(int i)
 			print_CloseTable();
 		}
 	}
+	
+	cout<<"Not found!"<<endl;
+	return false;
 	
 }
 
@@ -145,7 +155,7 @@ int main()
 
 
 
-	DFS(1); // test DFS one range;
+	DFS(1, 4); // test DFS one range;
 
 
 
