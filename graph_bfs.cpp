@@ -21,6 +21,7 @@ vector<int> result;
 
 void print_OpenTable();
 void print_CloseTable();
+void print_SearchTree();
 
 bool test_edge(int start, int end)
 {
@@ -32,7 +33,7 @@ bool test_edge(int start, int end)
 }
 
 
-// BFS one range;
+// BFS continuous execution;
 bool BFS(int source, int goal)
 {
 	visited[source-1] = true;	
@@ -42,6 +43,7 @@ bool BFS(int source, int goal)
     result.push_back(source);	
 	OpenTable.push_back(source);
 	
+	print_SearchTree();
 	print_OpenTable();
 	print_CloseTable();
 
@@ -52,6 +54,7 @@ bool BFS(int source, int goal)
 		OpenTable.erase(OpenTable.begin());
 		CloseTable.push_back(current);
 		
+		print_SearchTree();
 		print_OpenTable();
 		print_CloseTable();
 
@@ -68,12 +71,13 @@ bool BFS(int source, int goal)
 				if(j==goal)
 				{
 					cout<<"We find goal:"<<j<<endl;
+					print_SearchTree();
 					return true;
 				}
 								
 				OpenTable.push_back(j);
 				
-
+                print_SearchTree();
 				print_OpenTable();
 				print_CloseTable();
 			}
@@ -95,6 +99,7 @@ bool BFS_step(int source, int goal)
     result.push_back(source);	
 	OpenTable.push_back(source);
 	
+	print_SearchTree();
 	print_OpenTable();
 	print_CloseTable();	
 	cout<<"Press enter to continue: "<<endl;
@@ -107,9 +112,10 @@ bool BFS_step(int source, int goal)
 		OpenTable.erase(OpenTable.begin());
 		CloseTable.push_back(current);
 		
+		print_SearchTree();
 		print_OpenTable();
 		print_CloseTable();		
-		cout<<"Press enter to continue: "<<endl;
+		cout<<"Press enter to continue: ";
 	    cin.ignore();
 
 		for(int j=1;j<=num_v;j++)
@@ -125,15 +131,16 @@ bool BFS_step(int source, int goal)
 				if(j==goal)
 				{
 					cout<<"We find goal:"<<j<<endl;
+					print_SearchTree();
 					return true;
 				}
 								
 				OpenTable.push_back(j);
 				
-
+                print_SearchTree();
 				print_OpenTable();
 				print_CloseTable();				
-				cout<<"Press enter to continue: "<<endl;
+				cout<<"Press enter to continue: ";
 	            cin.ignore();
 			}
 		}
@@ -182,7 +189,27 @@ void print_CloseTable()
 	cout<<endl<<endl;
 }
 
-
+void print_SearchTree()
+{
+	cout<<"Search tree: "<<endl;
+	for(int i=0;i<result.size();i++)
+	{
+		if(i>0)
+		{
+			if(tree[result[i]-1].level > tree[result[i-1]-1].level)
+			{
+				cout<<endl; 
+			}
+		}
+		
+		
+		cout<<result[i]<<" ";
+	}
+	
+	cout<<endl;
+	
+	return;
+}
 
 
 int main()
@@ -232,8 +259,8 @@ int main()
 
 
 
-//	BFS(1, 5); // test BFS one range;	
-	BFS_step(1, 5); // test BFS one range;
+//	BFS(1, 5); // BFS continuous execution;	
+	BFS_step(1, 5); //BFS step execution;
 
 
 	
@@ -251,21 +278,9 @@ int main()
 	}
 	
 	cout<<endl;
-	cout<<"Search tree: "<<endl;
-	for(int i=0;i<result.size();i++)
-	{
-		if(i>0)
-		{
-			if(tree[result[i]-1].level > tree[result[i-1]-1].level)
-			{
-				cout<<endl; 
-			}
-		}
-		
-		
-		cout<<result[i]<<" ";
-	}
+	print_SearchTree();
 	cout<<endl;
+	
 
 
 
