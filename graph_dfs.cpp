@@ -18,7 +18,6 @@ struct Node
 };
 
 vector<Node> tree;
-vector<int> result;
 vector<int> sequence;
 
 void print_SearchTree();
@@ -43,7 +42,6 @@ bool DFS(int source, int goal)
 	tree[source-1].level = 0;
 
 //	cout<<"Current Node:"<<source<<" "<<endl;	
-    result.push_back(source);
     OpenTable.insert(OpenTable.begin(), source);
 	
 	print_SearchTree();
@@ -62,7 +60,6 @@ bool DFS(int source, int goal)
 			{				
 				visited[j-1] = true;
 //				cout<<"Current Node:"<<j<<" "<<endl;
-                result.push_back(j);
                 tree[current-1].child.push_back(j);
 				tree[j-1].level = tree[current-1].level + 1;
 				
@@ -142,6 +139,15 @@ void print_SearchTree()
 	
 	for(int i=0;i<sequence.size();i++)
 	{
+		if(i>0)
+		{
+			if(tree[sequence[i]-1].level > tree[sequence[i-1]-1].level)
+			{
+				cout<<endl; 
+			}
+		}
+		
+		
 		cout<<sequence[i]<<" ";
 	}
 	
