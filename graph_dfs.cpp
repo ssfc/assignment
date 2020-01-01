@@ -97,6 +97,74 @@ bool DFS(int source, int goal)
 	
 }
 
+// DFS one range;
+bool DFS_step(int source, int goal)
+{
+	visited[source-1] = true;	
+	tree[source-1].level = 0;
+
+//	cout<<"Current Node:"<<source<<" "<<endl;	
+    OpenTable.insert(OpenTable.begin(), source);
+	
+	print_SearchTree();
+	print_OpenTable();
+	print_CloseTable();
+	cout<<"Press enter to continue: "<<endl;
+	cin.ignore();
+
+	int current = -1;
+	while(!OpenTable.empty())
+	{
+		current = OpenTable.front();	
+		
+		bool flag = false; 
+		for(int j=1;j<=num_v;j++)
+		{
+			if((test_edge(current, j) == true)&&(visited[j-1]==false))
+			{				
+				visited[j-1] = true;
+//				cout<<"Current Node:"<<j<<" "<<endl;
+                tree[current-1].child.push_back(j);
+				tree[j-1].level = tree[current-1].level + 1;
+				
+				if(j==goal)
+				{
+					cout<<"We find goal:"<<j<<endl;
+					print_SearchTree();
+					return true;
+				}
+                
+				OpenTable.insert(OpenTable.begin(), j);
+				
+				print_SearchTree();
+				print_OpenTable();
+				print_CloseTable();
+				cout<<"Press enter to continue: "<<endl;
+	            cin.ignore();
+				
+				flag = true;
+				break;
+			}
+		}
+		
+		if(flag==false)
+		{
+			OpenTable.erase(OpenTable.begin());
+			CloseTable.push_back(current);
+			
+			print_SearchTree();
+			print_OpenTable();
+			print_CloseTable();
+			cout<<"Press enter to continue: "<<endl;
+	        cin.ignore();
+		}
+	}
+	
+	cout<<"Not found!"<<endl;
+	return false;
+	
+}
+
 
 void tree_bfs(int root)
 {  
@@ -242,7 +310,8 @@ int main()
 
 
 
-	DFS(1, 4); // test DFS one range;
+//	DFS(1, 4); // DFS continous execution;
+	DFS_step(1, 4); // DFS step execution;
 	
 	// print search tree;
 	
