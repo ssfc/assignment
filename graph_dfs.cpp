@@ -9,6 +9,17 @@ vector<bool> visited;
 vector<int> OpenTable;
 vector<int> CloseTable;
 
+struct Node
+{
+	int key;
+	int level;
+	vector<int> child;
+};
+
+vector<Node> tree;
+vector<int> result;
+
+
 void print_OpenTable();
 void print_CloseTable();
 
@@ -26,6 +37,7 @@ bool test_edge(int start, int end)
 bool DFS(int source, int goal)
 {
 	visited[source-1] = true;	
+	tree[source-1].level = 0;
 
 //	cout<<"Current Node:"<<source<<" "<<endl;	
     OpenTable.insert(OpenTable.begin(), source);
@@ -42,16 +54,18 @@ bool DFS(int source, int goal)
 		for(int j=1;j<=num_v;j++)
 		{
 			if((test_edge(current, j) == true)&&(visited[j-1]==false))
-			{
+			{				
+				visited[j-1] = true;
+				cout<<"Current Node:"<<j<<" "<<endl;
+                tree[current-1].child.push_back(j);
+				tree[j-1].level = tree[current-1].level + 1;
+				
 				if(j==goal)
 				{
 					cout<<"We find goal:"<<j<<endl;
 					return true;
 				}
-				
-				
-				visited[j-1] = true;
-//				cout<<"Current Node:"<<j<<" "<<endl;
+                
 				OpenTable.insert(OpenTable.begin(), j);
 				
 				print_OpenTable();
@@ -123,6 +137,14 @@ int main()
 	int N; // number of vertices
 	cin>>N;	
 	num_v = N;
+	
+	tree.resize(N);
+	
+	for(int i=0;i<N;i++)
+	{
+		tree[i].level = 0;
+	}
+	
 	int M; //  number of edges	
 	cin>>M;
 
@@ -156,6 +178,19 @@ int main()
 
 
 	DFS(1, 4); // test DFS one range;
+	
+	// print search tree;
+	
+	cout<<endl;
+	for(int i=0;i<N;i++)
+	{
+		cout<<"Node:"<<i+1<<"; Level:"<<tree[i].level<<"; Child:";
+		for(int j=0;j<tree[i].child.size();j++)
+		{
+			cout<<tree[i].child[j]<<" ";
+		}
+		cout<<endl;
+	}
 
 
 
