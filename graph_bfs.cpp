@@ -17,6 +17,7 @@ struct Node
 };
 
 vector<Node> tree;
+vector<int> result;
 
 void print_OpenTable();
 void print_CloseTable();
@@ -37,7 +38,8 @@ bool BFS(int source, int goal)
 	visited[source-1] = true;	
 	tree[source-1].level = 0;
 
-//	cout<<"Current Node:"<<i<<" "<<endl;	
+//	cout<<"Current Node:"<<i<<" "<<endl;
+    result.push_back(source);	
 	OpenTable.push_back(source);
 	
 	print_OpenTable();
@@ -59,6 +61,7 @@ bool BFS(int source, int goal)
 			{
 				visited[j-1] = true;
 //				cout<<"Current Node:"<<j<<" "<<endl;
+                result.push_back(j);
 				tree[current-1].child.push_back(j);
 				tree[j-1].level = tree[current-1].level + 1;
 				
@@ -73,6 +76,65 @@ bool BFS(int source, int goal)
 
 				print_OpenTable();
 				print_CloseTable();
+			}
+		}
+	}
+	
+	cout<<"Not found!"<<endl;
+	return false;
+}
+
+
+// BFS one range;
+bool BFS_step(int source, int goal)
+{
+	visited[source-1] = true;	
+	tree[source-1].level = 0;
+
+//	cout<<"Current Node:"<<i<<" "<<endl;
+    result.push_back(source);	
+	OpenTable.push_back(source);
+	
+	print_OpenTable();
+	print_CloseTable();	
+	cout<<"Press enter to continue: "<<endl;
+	cin.ignore();
+
+	int current = -1;
+	while(!OpenTable.empty())
+	{
+		current = OpenTable.front();
+		OpenTable.erase(OpenTable.begin());
+		CloseTable.push_back(current);
+		
+		print_OpenTable();
+		print_CloseTable();		
+		cout<<"Press enter to continue: "<<endl;
+	    cin.ignore();
+
+		for(int j=1;j<=num_v;j++)
+		{
+			if((test_edge(current, j) == true)&&(visited[j-1]==false))
+			{
+				visited[j-1] = true;
+//				cout<<"Current Node:"<<j<<" "<<endl;
+                result.push_back(j);
+				tree[current-1].child.push_back(j);
+				tree[j-1].level = tree[current-1].level + 1;
+				
+				if(j==goal)
+				{
+					cout<<"We find goal:"<<j<<endl;
+					return true;
+				}
+								
+				OpenTable.push_back(j);
+				
+
+				print_OpenTable();
+				print_CloseTable();				
+				cout<<"Press enter to continue: "<<endl;
+	            cin.ignore();
 			}
 		}
 	}
@@ -119,6 +181,8 @@ void print_CloseTable()
 	}
 	cout<<endl<<endl;
 }
+
+
 
 
 int main()
@@ -168,11 +232,14 @@ int main()
 
 
 
-	BFS(1, 5); // test BFS one range;
+//	BFS(1, 5); // test BFS one range;	
+	BFS_step(1, 5); // test BFS one range;
+
+
 	
 	// print search tree;
 	
-	
+	cout<<endl;
 	for(int i=0;i<N;i++)
 	{
 		cout<<"Node:"<<i+1<<"; Level:"<<tree[i].level<<"; Child:";
@@ -183,6 +250,22 @@ int main()
 		cout<<endl;
 	}
 	
+	cout<<endl;
+	cout<<"Search tree: "<<endl;
+	for(int i=0;i<result.size();i++)
+	{
+		if(i>0)
+		{
+			if(tree[result[i]-1].level > tree[result[i-1]-1].level)
+			{
+				cout<<endl; 
+			}
+		}
+		
+		
+		cout<<result[i]<<" ";
+	}
+	cout<<endl;
 
 
 
