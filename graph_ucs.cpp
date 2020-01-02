@@ -98,10 +98,22 @@ bool UFS(int source, int goal)
 		CloseTable.push_back(current);
 		*/
 		
-		current = OpenTable[min_index];		
-		OpenTable.erase(OpenTable.begin() + min_index);
-		CloseTable.push_back(current);
 		
+//		/*
+		current = OpenTable[min_index];	
+		
+		if(current==goal)
+		{
+			cout<<"We find goal:"<<current<<" "<<dist[current-1]<<endl;
+//			print_SearchTree();
+			return true;
+		}
+		
+		
+		visited[OpenTable[min_index]-1] = true;	
+		OpenTable.erase(OpenTable.begin() + min_index);				
+		CloseTable.push_back(current);
+//		*/
 		
 		print_SearchTree();
 		print_OpenTable();
@@ -111,23 +123,13 @@ bool UFS(int source, int goal)
 		{
 			if((test_edge(current, j) == true)&&(visited[j-1]==false))
 			{
-				visited[j-1] = true;
+//				visited[j-1] = true;
 //				cout<<"Current Node:"<<j<<" "<<endl;
                 result.push_back(j);
 				tree[current-1].child.push_back(j);
 				tree[j-1].level = tree[current-1].level + 1;
 				dist[j-1] = dist[current-1] + get_weight(current, j); // compute distance from source to j;
-				
-				
-				/*
-				if(j==goal)
-				{
-					cout<<"We find goal:"<<j<<endl;
-					print_SearchTree();
-					return true;
-				}
-				*/
-								
+												
 				OpenTable.push_back(j);
 				
                 print_SearchTree();
@@ -142,66 +144,6 @@ bool UFS(int source, int goal)
 }
 
 
-// UFS one range;
-bool UFS_step(int source, int goal)
-{
-	visited[source-1] = true;	
-	tree[source-1].level = 0;
-
-//	cout<<"Current Node:"<<i<<" "<<endl;
-    result.push_back(source);	
-	OpenTable.push_back(source);
-	
-	print_SearchTree();
-	print_OpenTable();
-	print_CloseTable();	
-	cout<<"Press enter to continue: "<<endl;
-	cin.ignore();
-
-	int current = -1;
-	while(!OpenTable.empty())
-	{
-		current = OpenTable.front();
-		OpenTable.erase(OpenTable.begin());
-		CloseTable.push_back(current);
-		
-		print_SearchTree();
-		print_OpenTable();
-		print_CloseTable();		
-		cout<<"Press enter to continue: ";
-	    cin.ignore();
-
-		for(int j=1;j<=num_v;j++)
-		{
-			if((test_edge(current, j) == true)&&(visited[j-1]==false))
-			{
-				visited[j-1] = true;
-//				cout<<"Current Node:"<<j<<" "<<endl;
-                result.push_back(j);
-				tree[current-1].child.push_back(j);
-				tree[j-1].level = tree[current-1].level + 1;
-				
-				if(j==goal)
-				{
-					cout<<"We find goal:"<<j<<endl;
-					print_SearchTree();
-					return true;
-				}
-								
-				OpenTable.push_back(j);
-				
-                print_SearchTree();
-				print_OpenTable();
-				print_CloseTable();				
-				cout<<"Press enter to continue: ";
-	            cin.ignore();
-			}
-		}
-	}
-	
-	cout<<"Not found!"<<endl;
-	return false;
-}
 
 
 void print_OpenTable()
@@ -219,8 +161,6 @@ void print_OpenTable()
 			cout<<OpenTable[i]<<" ";
 		}
 	}
-	
-	
 	cout<<endl;
 }
 
@@ -316,7 +256,7 @@ int main()
 
 
 
-	UFS(1, 5); // UFS continuous execution;	
+	UFS(1, 6); // UFS continuous execution;	
 //	UFS_step(1, 5); //UFS step execution;
 
 
@@ -347,8 +287,6 @@ int main()
     	cout<<"Node "<<i+1<<" Dist "<<dist[i]<<endl;
 	}
 	cout<<endl;
-
-
 	return 0;
 }
 
