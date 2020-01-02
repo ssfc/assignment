@@ -4,104 +4,152 @@ using namespace std;
 
 
 int num_v;
-vector<bool> adjacency_matrix;
+vector<int> adjacency_matrix;
 vector<bool> visited;
 vector<int> OpenTable;
 vector<int> CloseTable;
 
+struct Node
+{
+	int key;
+	int level;
+	vector<int> child;
+};
+
+vector<Node> tree;
+vector<int> result;
+
 void print_OpenTable();
 void print_CloseTable();
+void print_SearchTree();
 
 bool test_edge(int start, int end)
 {
 	bool flag = false;
 
-	if(adjacency_matrix[(start-1)*num_v+(end-1)]==true)    flag = true;
-	if(adjacency_matrix[(start-1)+(end-1)*num_v]==true)    flag = true;
+	if(adjacency_matrix[(start-1)*num_v+(end-1)]==1)    flag = true;
 
 	return flag;
 }
 
 
-// BFS one range;
-void BFS(int i)
+// BFS continuous execution;
+bool BFS(int source, int goal)
 {
-	visited[i-1] = true;	
+	visited[source-1] = true;	
+	tree[source-1].level = 0;
 
-	vector<int> q;
-	cout<<"Current Node:"<<i<<" "<<endl;	
-	q.push_back(i);
-	OpenTable.push_back(i);
+//	cout<<"Current Node:"<<i<<" "<<endl;
+    result.push_back(source);	
+	OpenTable.push_back(source);
 	
-	cout<<"q:";
-	for(int k=0;k<q.size();k++)
-	{
-		cout<<q[k]<<" ";
-	}
-	cout<<endl;
+	print_SearchTree();
 	print_OpenTable();
 	print_CloseTable();
 
 	int current = -1;
-	while(!q.empty())
+	while(!OpenTable.empty())
 	{
-		current = q.front();
-		q.erase(q.begin());
+		current = OpenTable.front();
 		OpenTable.erase(OpenTable.begin());
 		CloseTable.push_back(current);
+		
+		print_SearchTree();
+		print_OpenTable();
+		print_CloseTable();
 
 		for(int j=1;j<=num_v;j++)
 		{
 			if((test_edge(current, j) == true)&&(visited[j-1]==false))
 			{
 				visited[j-1] = true;
-				cout<<"Current Node:"<<j<<" "<<endl;
-				q.push_back(j);
+//				cout<<"Current Node:"<<j<<" "<<endl;
+                result.push_back(j);
+				tree[current-1].child.push_back(j);
+				tree[j-1].level = tree[current-1].level + 1;
+				
+				if(j==goal)
+				{
+					cout<<"We find goal:"<<j<<endl;
+					print_SearchTree();
+					return true;
+				}
+								
 				OpenTable.push_back(j);
 				
-				cout<<"q:";
-				for(int k=0;k<q.size();k++)
-				{
-					cout<<q[k]<<" ";
-				}
-				cout<<endl;
+                print_SearchTree();
 				print_OpenTable();
 				print_CloseTable();
 			}
 		}
 	}
 	
-	cout<<"q:";
-	for(int k=0;k<q.size();k++)
-	{
-		cout<<q[k]<<" ";
-	}
-	cout<<endl;
-	print_OpenTable();
-	print_CloseTable();
-	
+	cout<<"Not found!"<<endl;
+	return false;
 }
 
 
-
-// BFS all map;
-void BFSTraverse()
+// BFS one range;
+bool BFS_step(int source, int goal)
 {
-	// initialize visited matrix;
-	for(int i=1;i<=num_v;i++)
-	{
-		visited[i-1] = false;
-	}
+	visited[source-1] = true;	
+	tree[source-1].level = 0;
 
+//	cout<<"Current Node:"<<i<<" "<<endl;
+    result.push_back(source);	
+	OpenTable.push_back(source);
+	
+	print_SearchTree();
+	print_OpenTable();
+	print_CloseTable();	
+	cout<<"Press enter to continue: "<<endl;
+	cin.ignore();
 
-	for(int i=1;i<=num_v;i++)
+	int current = -1;
+	while(!OpenTable.empty())
 	{
-		if(visited[i-1]==false)
+		current = OpenTable.front();
+		OpenTable.erase(OpenTable.begin());
+		CloseTable.push_back(current);
+		
+		print_SearchTree();
+		print_OpenTable();
+		print_CloseTable();		
+		cout<<"Press enter to continue: ";
+	    cin.ignore();
+
+		for(int j=1;j<=num_v;j++)
 		{
-			BFS(i);
+			if((test_edge(current, j) == true)&&(visited[j-1]==false))
+			{
+				visited[j-1] = true;
+//				cout<<"Current Node:"<<j<<" "<<endl;
+                result.push_back(j);
+				tree[current-1].child.push_back(j);
+				tree[j-1].level = tree[current-1].level + 1;
+				
+				if(j==goal)
+				{
+					cout<<"We find goal:"<<j<<endl;
+					print_SearchTree();
+					return true;
+				}
+								
+				OpenTable.push_back(j);
+				
+                print_SearchTree();
+				print_OpenTable();
+				print_CloseTable();				
+				cout<<"Press enter to continue: ";
+	            cin.ignore();
+			}
 		}
 	}
+	
+	cout<<"Not found!"<<endl;
+	return false;
 }
+
 
 void print_OpenTable()
 {
@@ -141,6 +189,28 @@ void print_CloseTable()
 	cout<<endl<<endl;
 }
 
+void print_SearchTree()
+{
+	cout<<"Search tree: "<<endl;
+	for(int i=0;i<result.size();i++)
+	{
+		if(i>0)
+		{
+			if(tree[result[i]-1].level > tree[result[i-1]-1].level)
+			{
+				cout<<endl; 
+			}
+		}
+		
+		
+		cout<<result[i]<<" ";
+	}
+	
+	cout<<endl;
+	
+	return;
+}
+
 
 int main()
 {
@@ -149,13 +219,21 @@ int main()
 	int N; // number of vertices
 	cin>>N;	
 	num_v = N;
+	tree.resize(N);
+	
+	for(int i=0;i<N;i++)
+	{
+		tree[i].level = 0;
+	}
+	
+	
 	int M; //  number of edges	
 	cin>>M;
 
 	// create adjacency matrix;
 	for(int i=0;i<N*N;i++)
 	{
-		adjacency_matrix.push_back(false);
+		adjacency_matrix.push_back(-1);
 	}
 
 	// save current amp in adjacency matrix;
@@ -166,8 +244,7 @@ int main()
 		int end;
 		cin>>end;
 
-		adjacency_matrix[(start-1)*N + (end-1)] = true;
-		adjacency_matrix[(start-1) + (end-1)*N] = true;
+		adjacency_matrix[(start-1)*N + (end-1)] = 1;
 	}
 
 //	cout<<test_edge(2, 1)<<endl;
@@ -182,8 +259,28 @@ int main()
 
 
 
-//	BFS(1); // test BFS one range;
-	BFSTraverse();
+	BFS(1, 5); // BFS continuous execution;	
+//	BFS_step(1, 5); //BFS step execution;
+
+
+	
+	// print search tree;
+	
+	cout<<endl;
+	for(int i=0;i<N;i++)
+	{
+		cout<<"Node:"<<i+1<<"; Level:"<<tree[i].level<<"; Child:";
+		for(int j=0;j<tree[i].child.size();j++)
+		{
+			cout<<tree[i].child[j]<<" ";
+		}
+		cout<<endl;
+	}
+	
+	cout<<endl;
+	print_SearchTree();
+	cout<<endl;
+	
 
 
 
@@ -191,9 +288,13 @@ int main()
 }
 
 /*
-6 4
+6 8
 1 2
 1 6
-3 4
-2 5
+2 3
+2 4
+3 5
+4 5
+4 6
+5 6
 */
