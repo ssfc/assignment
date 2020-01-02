@@ -103,6 +103,8 @@ bool UFS(int source, int goal)
                 result.push_back(j);
 				tree[current-1].child.push_back(j);
 				tree[j-1].level = tree[current-1].level + 1;
+				dist[j-1] = dist[current-1] + get_weight(current, j); // compute distance from source to j;
+				
 				
 				/*
 				if(j==goal)
@@ -324,8 +326,14 @@ int main()
 	cout<<endl;
 	
 	
-	cout<<get_weight(1, 6)<<" "<<get_weight(6, 1);
-
+//	cout<<get_weight(1, 6)<<" "<<get_weight(6, 1);
+    
+    cout<<"Distance from source: "<<endl;
+    for(int i=0;i<dist.size();i++)
+    {
+    	cout<<"Node "<<i+1<<" Dist "<<dist[i]<<endl;
+	}
+	cout<<endl;
 
 
 	return 0;
