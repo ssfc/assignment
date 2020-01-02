@@ -49,11 +49,14 @@ int get_MinIndex()
 	int min_distance = INT_MAX;
 	int min_index;
   
+//    cout<<"Currently each distance in open table: "
 	for(int i=0;i<OpenTable.size();i++)
 	{
-		if(dist[OpenTable[i]]<=min_distance)
+//		cout<<"Node "<<i+1<<" Dist "<<dist[i]<<endl;
+		
+		if(dist[OpenTable[i]-1] <= min_distance)
 		{
-			min_distance = dist[i];
+			min_distance = dist[OpenTable[i]-1];
 			min_index = i;
 		}
 	}
@@ -86,9 +89,19 @@ bool UFS(int source, int goal)
 	int current = -1;
 	while(!OpenTable.empty())
 	{
-		current = OpenTable.front();
-		OpenTable.erase(OpenTable.begin());
+		int min_index = get_MinIndex();
+		cout<<"Minimum index "<<min_index<<endl; // test whether minimum index is correct; 
+		
+		/*		
+		current = OpenTable.front();		
+		OpenTable.erase(OpenTable.begin());		
 		CloseTable.push_back(current);
+		*/
+		
+		current = OpenTable[min_index];		
+		OpenTable.erase(OpenTable.begin() + min_index);
+		CloseTable.push_back(current);
+		
 		
 		print_SearchTree();
 		print_OpenTable();
