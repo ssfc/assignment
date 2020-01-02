@@ -1,3 +1,4 @@
+#include<climits>
 #include<iostream>
 #include<vector>
 using namespace std;
@@ -6,6 +7,8 @@ using namespace std;
 int num_v;
 vector<int> adjacency_matrix;
 vector<bool> visited;
+vector<int> dist;     // dist[i] will hold the shortest distance from src to i; 
+
 vector<int> OpenTable;
 vector<int> CloseTable;
 
@@ -23,18 +26,25 @@ void print_OpenTable();
 void print_CloseTable();
 void print_SearchTree();
 
+
+int get_weight(int start, int end)
+{
+	return adjacency_matrix[(start-1)*num_v + (end-1)];
+}
+
+
 bool test_edge(int start, int end)
 {
 	bool flag = false;
 
-	if(adjacency_matrix[(start-1)*num_v+(end-1)] != -1)    flag = true;
+	if(adjacency_matrix[(start-1)*num_v + (end-1)] != -1)    flag = true;
 
 	return flag;
 }
 
 
-// BFS continuous execution;
-bool BFS(int source, int goal)
+// UFS continuous execution;
+bool UFS(int source, int goal)
 {
 	visited[source-1] = true;	
 	tree[source-1].level = 0;
@@ -89,8 +99,8 @@ bool BFS(int source, int goal)
 }
 
 
-// BFS one range;
-bool BFS_step(int source, int goal)
+// UFS one range;
+bool UFS_step(int source, int goal)
 {
 	visited[source-1] = true;	
 	tree[source-1].level = 0;
@@ -260,8 +270,8 @@ int main()
 
 
 
-	BFS(1, 5); // BFS continuous execution;	
-//	BFS_step(1, 5); //BFS step execution;
+	UFS(1, 5); // UFS continuous execution;	
+//	UFS_step(1, 5); //UFS step execution;
 
 
 	
@@ -282,6 +292,8 @@ int main()
 	print_SearchTree();
 	cout<<endl;
 	
+	
+	cout<<get_weight(1, 6)<<" "<<get_weight(6, 1);
 
 
 
