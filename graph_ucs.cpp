@@ -37,18 +37,44 @@ bool test_edge(int start, int end)
 {
 	bool flag = false;
 
-	if(adjacency_matrix[(start-1)*num_v + (end-1)] != -1)    flag = true;
+	if(adjacency_matrix[(start-1)*num_v + (end-1)] != INT_MAX)    flag = true;
 
 	return flag;
+}
+
+// get minimum index in the open table; 
+int get_MinIndex()
+{
+	// Initialize min value
+	int min_distance = INT_MAX;
+	int min_index;
+  
+	for(int i=0;i<OpenTable.size();i++)
+	{
+		if(dist[OpenTable[i]]<=min_distance)
+		{
+			min_distance = dist[i];
+			min_index = i;
+		}
+	}
+
+	return min_index;
 }
 
 
 // UFS continuous execution;
 bool UFS(int source, int goal)
 {
+	// initialize before start; 
+	for (int i=0;i<num_v;i++)
+	{
+        dist[i] = INT_MAX;
+	}
+	
+	dist[source-1] = 0;
 	visited[source-1] = true;	
 	tree[source-1].level = 0;
-
+	
 //	cout<<"Current Node:"<<i<<" "<<endl;
     result.push_back(source);	
 	OpenTable.push_back(source);
@@ -78,12 +104,14 @@ bool UFS(int source, int goal)
 				tree[current-1].child.push_back(j);
 				tree[j-1].level = tree[current-1].level + 1;
 				
+				/*
 				if(j==goal)
 				{
 					cout<<"We find goal:"<<j<<endl;
 					print_SearchTree();
 					return true;
 				}
+				*/
 								
 				OpenTable.push_back(j);
 				
@@ -230,6 +258,9 @@ int main()
 	cin>>N;	
 	num_v = N;
 	tree.resize(N);
+	dist.resize(N);
+	
+	
 	
 	for(int i=0;i<N;i++)
 	{
@@ -243,7 +274,7 @@ int main()
 	// create adjacency matrix;
 	for(int i=0;i<N*N;i++)
 	{
-		adjacency_matrix.push_back(-1);
+		adjacency_matrix.push_back(INT_MAX);
 	}
 
 	// save current amp in adjacency matrix;
