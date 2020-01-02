@@ -27,7 +27,7 @@ bool test_edge(int start, int end)
 {
 	bool flag = false;
 
-	if(adjacency_matrix[(start-1)*num_v+(end-1)]==1)    flag = true;
+	if(adjacency_matrix[(start-1)*num_v+(end-1)] != -1)    flag = true;
 
 	return flag;
 }
@@ -244,7 +244,8 @@ int main()
 		int end;
 		cin>>end;
 
-		adjacency_matrix[(start-1)*N + (end-1)] = 1;
+//		adjacency_matrix[(start-1)*N + (end-1)] = 1;
+		cin>>adjacency_matrix[(start-1)*N + (end-1)];
 	}
 
 //	cout<<test_edge(2, 1)<<endl;
@@ -287,14 +288,17 @@ int main()
 	return 0;
 }
 
+
 /*
 6 8
-1 2
-1 6
-2 3
-2 4
-3 5
-4 5
-4 6
-5 6
+1 2 1
+1 6 12
+2 3 3
+2 4 1
+3 5 3
+4 5 1
+4 6 2
+5 6 3
 */
+
+
