@@ -1,3 +1,4 @@
+#include<algorithm>
 #include<climits>
 #include<iostream>
 #include<vector>
@@ -98,7 +99,7 @@ bool UFS(int source, int goal)
 		if(current==goal)
 		{
 			cout<<"We find goal:"<<current<<" "<<dist[current-1]<<endl;
-//			print_SearchTree();
+			print_SearchTree();
 			return true;
 		}
 		
@@ -107,7 +108,7 @@ bool UFS(int source, int goal)
 		OpenTable.erase(OpenTable.begin() + min_index);				
 		CloseTable.push_back(current);
 		
-//		print_SearchTree();
+		print_SearchTree();
 		print_OpenTable();
 		print_CloseTable();
 
@@ -124,8 +125,12 @@ bool UFS(int source, int goal)
 					dist[j-1] = dist[current-1] + get_weight(current, j); // compute distance from source to j;
 					previous[j-1] = current;
 				}
-																
-				OpenTable.push_back(j);
+					
+				if(find(OpenTable.begin(), OpenTable.end(), j) == OpenTable.end() )
+				{
+					OpenTable.push_back(j);					
+				}											
+				
 				
                 print_SearchTree();
 				print_OpenTable();
