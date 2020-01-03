@@ -6,9 +6,9 @@ using namespace std;
 
 int num_v;
 vector<int> adjacency_matrix;
-vector<bool> sptSet;
-vector<int> dist;     // dist[i] will hold the shortest distance from src to i; 
-
+vector<bool> sptSet; // sptSet[i] will true if vertex i is included in shortest path tree or shortest distance from src to i is finalized
+vector<int> dist;    // dist[i] will hold the shortest distance from src to i; 
+vector<int> previous;
 vector<int> OpenTable;
 vector<int> CloseTable;
 
@@ -73,6 +73,7 @@ bool UFS(int source, int goal)
 	{
         dist[i] = INT_MAX;
         sptSet[i] = false;
+        previous[i] = -1;
 	}
 	
 	dist[source-1] = 0;
@@ -121,6 +122,7 @@ bool UFS(int source, int goal)
 				if(dist[j-1] >  dist[current-1] + get_weight(current, j))
 				{
 					dist[j-1] = dist[current-1] + get_weight(current, j); // compute distance from source to j;
+					previous[j-1] = current;
 				}
 																
 				OpenTable.push_back(j);
@@ -205,6 +207,8 @@ int main()
 	num_v = N;
 	tree.resize(num_v);
 	dist.resize(num_v);
+	sptSet.resize(num_v);
+	previous.resize(num_v);
 	
 	for(int i=0;i<N;i++)
 	{
@@ -236,8 +240,7 @@ int main()
 //	cout<<test_edge(2, 1)<<endl;
 //	cout<<test_edge(2, 4)<<endl;
 
-	// generate sptSet;
-	sptSet.resize(N);
+	
 
 	UFS(1, 6); // UFS continuous execution;	
 //	UFS_step(1, 5); //UFS step execution;
@@ -270,6 +273,15 @@ int main()
     	cout<<"Node "<<i+1<<" Dist "<<dist[i]<<endl;
 	}
 	cout<<endl;
+	
+	cout<<"Previous Node: "<<endl;
+    for(int i=0;i<dist.size();i++)
+    {
+    	cout<<"Node "<<i+1<<" Previous "<<previous[i]<<endl;
+	}
+	cout<<endl;
+
+	
 	return 0;
 }
 
