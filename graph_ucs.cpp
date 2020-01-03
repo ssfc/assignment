@@ -21,7 +21,7 @@ struct Node
 };
 
 vector<Node> tree;
-vector<int> result;
+vector<int> sequence;
 
 void print_OpenTable();
 void print_CloseTable();
@@ -82,7 +82,7 @@ bool UFS(int source, int goal)
 	tree[source-1].level = 0;
 	
 //	cout<<"Current Node:"<<i<<" "<<endl;
-    result.push_back(source);	
+    sequence.push_back(source);	
 	OpenTable.push_back(source);
 	
 	print_SearchTree();
@@ -117,7 +117,7 @@ bool UFS(int source, int goal)
 			if((test_edge(current, j) == true)&&(sptSet[j-1]==false))
 			{
 //				cout<<"Current Node:"<<j<<" "<<endl;
-                result.push_back(j);
+                sequence.push_back(j);
 				tree[current-1].child.push_back(j);
 				tree[j-1].level = tree[current-1].level + 1;
 				if(dist[j-1] >  dist[current-1] + get_weight(current, j))
@@ -183,18 +183,18 @@ void print_CloseTable()
 void print_SearchTree()
 {
 	cout<<"Search tree: "<<endl;
-	for(int i=0;i<result.size();i++)
+	for(int i=0;i<sequence.size();i++)
 	{
 		if(i>0)
 		{
-			if(tree[result[i]-1].level > tree[result[i-1]-1].level)
+			if(tree[sequence[i]-1].level > tree[sequence[i-1]-1].level)
 			{
 				cout<<endl; 
 			}
 		}
 		
 		
-		cout<<result[i]<<" ";
+		cout<<sequence[i]<<" ";
 	}
 	
 	cout<<endl;
