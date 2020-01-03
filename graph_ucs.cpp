@@ -6,7 +6,7 @@ using namespace std;
 
 int num_v;
 vector<int> adjacency_matrix;
-vector<bool> visited;
+vector<bool> sptSet;
 vector<int> dist;     // dist[i] will hold the shortest distance from src to i; 
 
 vector<int> OpenTable;
@@ -72,10 +72,11 @@ bool UFS(int source, int goal)
 	for (int i=0;i<num_v;i++)
 	{
         dist[i] = INT_MAX;
+        sptSet[i] = false;
 	}
 	
 	dist[source-1] = 0;
-	visited[source-1] = true;	
+	sptSet[source-1] = true;	
 	tree[source-1].level = 0;
 	
 //	cout<<"Current Node:"<<i<<" "<<endl;
@@ -90,16 +91,7 @@ bool UFS(int source, int goal)
 	while(!OpenTable.empty())
 	{
 		int min_index = get_MinIndex();
-		cout<<"Minimum index "<<min_index<<endl; // test whether minimum index is correct; 
-		
-		/*		
-		current = OpenTable.front();		
-		OpenTable.erase(OpenTable.begin());		
-		CloseTable.push_back(current);
-		*/
-		
-		
-//		/*
+//		cout<<"Minimum index "<<min_index<<endl; // test whether minimum index is correct; 
 		current = OpenTable[min_index];	
 		
 		if(current==goal)
@@ -110,20 +102,18 @@ bool UFS(int source, int goal)
 		}
 		
 		
-		visited[OpenTable[min_index]-1] = true;	
+		sptSet[OpenTable[min_index]-1] = true;	
 		OpenTable.erase(OpenTable.begin() + min_index);				
 		CloseTable.push_back(current);
-//		*/
 		
-		print_SearchTree();
+//		print_SearchTree();
 		print_OpenTable();
 		print_CloseTable();
 
 		for(int j=1;j<=num_v;j++)
 		{
-			if((test_edge(current, j) == true)&&(visited[j-1]==false))
+			if((test_edge(current, j) == true)&&(sptSet[j-1]==false))
 			{
-//				visited[j-1] = true;
 //				cout<<"Current Node:"<<j<<" "<<endl;
                 result.push_back(j);
 				tree[current-1].child.push_back(j);
@@ -145,8 +135,6 @@ bool UFS(int source, int goal)
 	cout<<"Not found!"<<endl;
 	return false;
 }
-
-
 
 
 void print_OpenTable()
@@ -215,10 +203,8 @@ int main()
 	int N; // number of vertices
 	cin>>N;	
 	num_v = N;
-	tree.resize(N);
-	dist.resize(N);
-	
-	
+	tree.resize(num_v);
+	dist.resize(num_v);
 	
 	for(int i=0;i<N;i++)
 	{
@@ -250,14 +236,8 @@ int main()
 //	cout<<test_edge(2, 1)<<endl;
 //	cout<<test_edge(2, 4)<<endl;
 
-	// generate visited point;
-	visited.resize(N);
-	for(int i=0;i<N;i++)
-	{
-		visited[i] = false;
-	}
-
-
+	// generate sptSet;
+	sptSet.resize(N);
 
 	UFS(1, 6); // UFS continuous execution;	
 //	UFS_step(1, 5); //UFS step execution;
