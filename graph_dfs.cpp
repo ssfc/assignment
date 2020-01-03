@@ -29,7 +29,7 @@ bool test_edge(int start, int end)
 {
 	bool flag = false;
 
-	if(adjacency_matrix[(start-1)*num_v+(end-1)]==true)    flag = true;
+	if(adjacency_matrix[start*num_v + end]==true)    flag = true;
 
 	return flag;
 }
@@ -38,8 +38,8 @@ bool test_edge(int start, int end)
 // DFS one range;
 bool DFS(int source, int goal)
 {
-	visited[source-1] = true;	
-	tree[source-1].level = 0;
+	visited[source] = true;	
+	tree[source].level = 0;
 
 //	cout<<"Current Node:"<<source<<" "<<endl;	
     OpenTable.insert(OpenTable.begin(), source);
@@ -54,14 +54,14 @@ bool DFS(int source, int goal)
 		current = OpenTable.front();	
 		
 		bool flag = false; 
-		for(int j=1;j<=num_v;j++)
+		for(int j=0;j<num_v;j++)
 		{
-			if((test_edge(current, j) == true)&&(visited[j-1]==false))
+			if((test_edge(current, j) == true)&&(visited[j]==false))
 			{				
-				visited[j-1] = true;
+				visited[j] = true;
 //				cout<<"Current Node:"<<j<<" "<<endl;
-                tree[current-1].child.push_back(j);
-				tree[j-1].level = tree[current-1].level + 1;
+                tree[current].child.push_back(j);
+				tree[j].level = tree[current].level + 1;
 				
 				if(j==goal)
 				{
@@ -100,8 +100,8 @@ bool DFS(int source, int goal)
 // DFS one range;
 bool DFS_step(int source, int goal)
 {
-	visited[source-1] = true;	
-	tree[source-1].level = 0;
+	visited[source] = true;	
+	tree[source].level = 0;
 
 //	cout<<"Current Node:"<<source<<" "<<endl;	
     OpenTable.insert(OpenTable.begin(), source);
@@ -118,14 +118,14 @@ bool DFS_step(int source, int goal)
 		current = OpenTable.front();	
 		
 		bool flag = false; 
-		for(int j=1;j<=num_v;j++)
+		for(int j=0;j<num_v;j++)
 		{
-			if((test_edge(current, j) == true)&&(visited[j-1]==false))
+			if((test_edge(current, j) == true)&&(visited[j]==false))
 			{				
-				visited[j-1] = true;
+				visited[j] = true;
 //				cout<<"Current Node:"<<j<<" "<<endl;
-                tree[current-1].child.push_back(j);
-				tree[j-1].level = tree[current-1].level + 1;
+                tree[current].child.push_back(j);
+				tree[j].level = tree[current].level + 1;
 				
 				if(j==goal)
 				{
@@ -185,11 +185,11 @@ void tree_bfs(int root)
 		
 		sequence.push_back(current); 
 
-		if(tree[current-1].child.size()>0)
+		if(tree[current].child.size()>0)
 		{
-			for(int i=0;i<tree[current-1].child.size();i++)
+			for(int i=0;i<tree[current].child.size();i++)
 			{
-				q.push_back(tree[current-1].child[i]);
+				q.push_back(tree[current].child[i]);
 			}
 		}
 
@@ -203,13 +203,13 @@ void print_SearchTree()
 {
 	cout<<"Search tree: "<<endl;
 	
-	tree_bfs(1);
+	tree_bfs(0);
 	
 	for(int i=0;i<sequence.size();i++)
 	{
 		if(i>0)
 		{
-			if(tree[sequence[i]-1].level > tree[sequence[i-1]-1].level)
+			if(tree[sequence[i]].level > tree[sequence[i-1]].level)
 			{
 				cout<<endl; 
 			}
@@ -295,7 +295,7 @@ int main()
 		int end;
 		cin>>end;
 
-		adjacency_matrix[(start-1)*N + (end-1)] = true;
+		adjacency_matrix[start*N + end] = true;
 	}
 
 //	cout<<test_edge(2, 1)<<endl;
@@ -310,15 +310,15 @@ int main()
 
 
 
-//	DFS(1, 4); // DFS continous execution;
-	DFS_step(1, 4); // DFS step execution;
+//	DFS(0, 3); // DFS continous execution;
+	DFS_step(0, 3); // DFS step execution;
 	
 	// print search tree;
 	
 	cout<<endl;
 	for(int i=0;i<N;i++)
 	{
-		cout<<"Node:"<<i+1<<"; Level:"<<tree[i].level<<"; Child:";
+		cout<<"Node:"<<i<<"; Level:"<<tree[i].level<<"; Child:";
 		for(int j=0;j<tree[i].child.size();j++)
 		{
 			cout<<tree[i].child[j]<<" ";
@@ -335,14 +335,14 @@ int main()
 
 /*
 6 8
+0 1
+0 5
 1 2
-1 6
-2 3
+1 3
 2 4
+3 4
 3 5
 4 5
-4 6
-5 6
 */
 
 
