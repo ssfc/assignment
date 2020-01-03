@@ -117,9 +117,10 @@ bool UFS(int source, int goal)
 			if((test_edge(current, j) == true)&&(sptSet[j-1]==false))
 			{
 //				cout<<"Current Node:"<<j<<" "<<endl;
-                sequence.push_back(j);
-				tree[current-1].child.push_back(j);
-				tree[j-1].level = tree[current-1].level + 1;
+
+//				tree[current-1].child.push_back(j);
+//				tree[j-1].level = tree[current-1].level + 1;
+				
 				if(dist[j-1] >  dist[current-1] + get_weight(current, j))
 				{
 					dist[j-1] = dist[current-1] + get_weight(current, j); // compute distance from source to j;
@@ -180,9 +181,56 @@ void print_CloseTable()
 	cout<<endl<<endl;
 }
 
+void tree_bfs(int root)
+{  
+    for(int i=0;i<num_v;i++)
+    {
+    	tree[i].child.resize(0);
+	}
+	
+	for(int i=0;i<num_v;i++)
+	{
+		tree[previous[i]-1].child.push_back(i+1);
+		tree[i].level = tree[previous[i]-1].level + 1;
+	}
+
+
+    sequence.resize(0);
+
+    if (root == -1)
+	{  
+        return;  
+    }  
+
+	vector<int> q;  
+    q.push_back(root);
+
+    while (!q.empty())
+	{
+		int current = q[0];
+		q.erase(q.begin());
+		
+		sequence.push_back(current); 
+
+		if(tree[current-1].child.size()>0)
+		{
+			for(int i=0;i<tree[current-1].child.size();i++)
+			{
+				q.push_back(tree[current-1].child[i]);
+			}
+		}
+
+    }
+
+    return;
+} 
+
 void print_SearchTree()
 {
 	cout<<"Search tree: "<<endl;
+	
+	tree_bfs(1);
+	
 	for(int i=0;i<sequence.size();i++)
 	{
 		if(i>0)
