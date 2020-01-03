@@ -53,7 +53,7 @@ int get_MinIndex()
 //    cout<<"Currently each distance in open table: "
 	for(int i=0;i<OpenTable.size();i++)
 	{
-//		cout<<"Node "<<i+1<<" Dist "<<dist[i]<<endl;
+//		cout<<"Node "<<i<<" Dist "<<dist[i]<<endl;
 		
 		if(dist[OpenTable[i]] <= min_distance)
 		{
@@ -98,7 +98,7 @@ bool UFS(int source, int goal)
 		
 		if(current==goal)
 		{
-			cout<<"We find goal:"<<current<<" "<<dist[current]<<endl;
+			cout<<"We find goal:"<<current<<" Distance: "<<dist[current]<<endl;
 			print_SearchTree();
 			return true;
 		}
@@ -126,13 +126,14 @@ bool UFS(int source, int goal)
 					
 				if(find(OpenTable.begin(), OpenTable.end(), j) == OpenTable.end() )
 				{
-					OpenTable.push_back(j);					
+					OpenTable.push_back(j);		
+					print_SearchTree();
+				    print_OpenTable();
+				    print_CloseTable();			
 				}											
 				
 				
-                print_SearchTree();
-				print_OpenTable();
-				print_CloseTable();
+                
 			}
 		}
 	}
@@ -288,16 +289,10 @@ int main()
 //		adjacency_matrix[(start-1)*N + (end-1)] = 1;
 		cin>>adjacency_matrix[start*N + end];
 	}
-
-//	cout<<test_edge(2, 1)<<endl;
-//	cout<<test_edge(2, 4)<<endl;
-
 	
 
 	UFS(0, 5); // UFS continuous execution;	
 //	UFS_step(1, 6); //UFS step execution;
-
-
 	
 	// print search tree;
 	
@@ -326,10 +321,23 @@ int main()
 	}
 	cout<<endl;
 	
+	/*
 	cout<<"Previous Node: "<<endl;
     for(int i=0;i<dist.size();i++)
     {
     	cout<<"Node "<<i<<" Previous "<<previous[i]<<endl;
+	}
+	cout<<endl;
+	*/
+	
+	cout<<"Distance: "<<dist[5]<<endl;
+	cout<<"Path: ";
+	int current = 5;
+	while(current != -1)
+	{
+		cout<<current;
+		if(current != 0)    cout<<"<-";
+		current = previous[current];
 	}
 	cout<<endl;
 
