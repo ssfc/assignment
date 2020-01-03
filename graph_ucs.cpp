@@ -85,7 +85,7 @@ bool UFS(int source, int goal)
     sequence.push_back(source);	
 	OpenTable.push_back(source);
 	
-//	print_SearchTree();
+	print_SearchTree();
 	print_OpenTable();
 	print_CloseTable();
 
@@ -99,7 +99,7 @@ bool UFS(int source, int goal)
 		if(current==goal)
 		{
 			cout<<"We find goal:"<<current<<" "<<dist[current]<<endl;
-//			print_SearchTree();
+			print_SearchTree();
 			return true;
 		}
 		
@@ -108,7 +108,7 @@ bool UFS(int source, int goal)
 		OpenTable.erase(OpenTable.begin() + min_index);				
 		CloseTable.push_back(current);
 		
-//		print_SearchTree();
+		print_SearchTree();
 		print_OpenTable();
 		print_CloseTable();
 
@@ -117,9 +117,6 @@ bool UFS(int source, int goal)
 			if((test_edge(current, j) == true)&&(sptSet[j]==false))
 			{
 //				cout<<"Current Node:"<<j<<" "<<endl;
-
-//				tree[current-1].child.push_back(j);
-//				tree[j-1].level = tree[current-1].level + 1;
 				
 				if(dist[j] >  dist[current] + get_weight(current, j))
 				{
@@ -133,7 +130,7 @@ bool UFS(int source, int goal)
 				}											
 				
 				
-//                print_SearchTree();
+                print_SearchTree();
 				print_OpenTable();
 				print_CloseTable();
 			}
@@ -190,10 +187,12 @@ void tree_bfs(int root)
 	
 	for(int i=0;i<num_v;i++)
 	{
-		tree[previous[i]].child.push_back(i);
-		tree[i].level = tree[previous[i]].level + 1;
+		if(previous[i] != -1)
+		{
+			tree[previous[i]].child.push_back(i);
+		    tree[i].level = tree[previous[i]].level + 1;
+		}		
 	}
-
 
     sequence.resize(0);
 
@@ -314,7 +313,7 @@ int main()
 	}
 	
 	cout<<endl;
-//	print_SearchTree();
+	print_SearchTree();
 	cout<<endl;
 	
 	
