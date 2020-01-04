@@ -113,11 +113,15 @@ bool UFS(int source, int goal)
 	print_CloseTable();
 
 	int current = -1;
+	int currentNode = -1; 
 	while(!OpenTable.empty())
 	{
 		int min_index = get_MinIndex();
+		int minPathIndex = get_minPathIndex();
+		
 //		cout<<"Minimum index "<<min_index<<endl; // test whether minimum index is correct; 
 		current = OpenTable[min_index];	
+//		currentNode = OpenTablePath[minPathIndex].member[]; /////////////////////////////////////////////////////////
 		
 		if(current==goal)
 		{
@@ -137,26 +141,53 @@ bool UFS(int source, int goal)
 
 		for(int j=0;j<num_v;j++)
 		{
-			if((get_weight(current, j) != INT_MAX)&&(sptSet[j]==false))
+			if(get_weight(current, j) != INT_MAX)
 			{
-//				cout<<"Current Node:"<<j<<" "<<endl;
-				
-				if(dist[j] >  dist[current] + get_weight(current, j))
+				if((sptSet[j]==false) && (find(OpenTable.begin(), OpenTable.end(), j) == OpenTable.end()))
 				{
-					dist[j] = dist[current] + get_weight(current, j); // compute distance from source to j;
+					dist[j] = dist[current] + get_weight(current, j); 
 					previous[j] = current;
+					OpenTable.push_back(j);	
 				}
-					
-				if(find(OpenTable.begin(), OpenTable.end(), j) == OpenTable.end() )
+				else if((sptSet[j]==false) && (find(OpenTable.begin(), OpenTable.end(), j) != OpenTable.end())) // node j is in open table; 
 				{
-					OpenTable.push_back(j);		
-					print_SearchTree();
-				    print_OpenTable();
-				    print_CloseTable();			
-				}											
+					if(dist[j] >  dist[current] + get_weight(current, j))
+					{
+						dist[j] = dist[current] + get_weight(current, j); 
+						previous[j] = current;
+					}
+				}
+				else if(sptSet[j]==true)
+				{
+					
+				}
 				
+				print_SearchTree();
+				print_OpenTable();
+				print_CloseTable();	
 				
-                
+				/*
+				if((get_weight(current, j) != INT_MAX)&&(sptSet[j]==false))
+				{
+	//				cout<<"Current Node:"<<j<<" "<<endl;
+					
+					if(dist[j] >  dist[current] + get_weight(current, j))
+					{
+						dist[j] = dist[current] + get_weight(current, j); // compute distance from source to j;
+						previous[j] = current;
+					}
+						
+					if(find(OpenTable.begin(), OpenTable.end(), j) == OpenTable.end() )
+					{
+						OpenTable.push_back(j);		
+						print_SearchTree();
+					    print_OpenTable();
+					    print_CloseTable();			
+					}										
+	                
+				}
+				
+				*/
 			}
 		}
 	}
