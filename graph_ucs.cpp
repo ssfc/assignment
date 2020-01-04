@@ -132,6 +132,86 @@ bool UFS(int source, int goal)
 	return false;
 }
 
+// UFS step execution;
+bool UFS_step(int source, int goal)
+{
+	// initialize before start; 
+	for (int i=0;i<num_v;i++)
+	{
+        dist[i] = INT_MAX;
+        sptSet[i] = false;
+        previous[i] = -1;
+	}
+	
+	dist[source] = 0;
+	sptSet[source] = true;	
+	tree[source].level = 0;
+	
+//	cout<<"Current Node:"<<i<<" "<<endl;
+    sequence.push_back(source);	
+	OpenTable.push_back(source);
+	
+	print_SearchTree();
+	print_OpenTable();
+	print_CloseTable();
+	cout<<"Press enter to continue: "<<endl;
+	cin.ignore();
+
+	int current = -1;
+	while(!OpenTable.empty())
+	{
+		int min_index = get_MinIndex();
+//		cout<<"Minimum index "<<min_index<<endl; // test whether minimum index is correct; 
+		current = OpenTable[min_index];	
+		
+		if(current==goal)
+		{
+			cout<<"We find goal:"<<current<<" Distance: "<<dist[current]<<endl;
+			print_SearchTree();
+			return true;
+		}
+		
+		
+		sptSet[OpenTable[min_index]] = true;	
+		OpenTable.erase(OpenTable.begin() + min_index);				
+		CloseTable.push_back(current);
+		
+		print_SearchTree();
+		print_OpenTable();
+		print_CloseTable();
+		cout<<"Press enter to continue: "<<endl;
+	    cin.ignore();
+
+		for(int j=0;j<num_v;j++)
+		{
+			if((get_weight(current, j) != INT_MAX)&&(sptSet[j]==false))
+			{
+//				cout<<"Current Node:"<<j<<" "<<endl;
+				
+				if(dist[j] >  dist[current] + get_weight(current, j))
+				{
+					dist[j] = dist[current] + get_weight(current, j); // compute distance from source to j;
+					previous[j] = current;
+				}
+					
+				if(find(OpenTable.begin(), OpenTable.end(), j) == OpenTable.end() )
+				{
+					OpenTable.push_back(j);		
+					print_SearchTree();
+				    print_OpenTable();
+				    print_CloseTable();	
+					cout<<"Press enter to continue: "<<endl;
+	                cin.ignore();		
+				}															
+                
+			}
+		}
+	}
+	
+	cout<<"Not found!"<<endl;
+	return false;
+}
+
 
 void print_OpenTable()
 {
@@ -276,16 +356,14 @@ int main()
 		int end;
 		cin>>end;
 
-//		adjacency_matrix[(start-1)*N + (end-1)] = 1;
 		cin>>adjacency_matrix[start*N + end];
 	}
 	
 
-	UFS(0, 5); // UFS continuous execution;	
-//	UFS_step(1, 6); //UFS step execution;
+//	UFS(0, 5); // UFS continuous execution;	
+	UFS_step(0, 5); //UFS step execution;
 	
 	// print search tree;
-	
 	cout<<endl;
 	for(int i=0;i<N;i++)
 	{
