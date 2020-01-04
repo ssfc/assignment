@@ -33,16 +33,6 @@ int get_weight(int start, int end)
 	return adjacency_matrix[start*num_v + end];
 }
 
-
-bool test_edge(int start, int end)
-{
-	bool flag = false;
-
-	if(adjacency_matrix[start*num_v + end] != INT_MAX)    flag = true;
-
-	return flag;
-}
-
 // get minimum index in the open table; 
 int get_MinIndex()
 {
@@ -114,7 +104,7 @@ bool UFS(int source, int goal)
 
 		for(int j=0;j<num_v;j++)
 		{
-			if((test_edge(current, j) == true)&&(sptSet[j]==false))
+			if((get_weight(current, j) != INT_MAX)&&(sptSet[j]==false))
 			{
 //				cout<<"Current Node:"<<j<<" "<<endl;
 				
