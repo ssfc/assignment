@@ -141,13 +141,17 @@ bool UFS(int source, int goal)
 
 		for(int j=0;j<num_v;j++)
 		{
-			if(get_weight(current, j) != INT_MAX)
+			if(get_weight(current, j) != INT_MAX) // check current node's neighbors; 
 			{
-				if((sptSet[j]==false) && (find(OpenTable.begin(), OpenTable.end(), j) == OpenTable.end()))
+				if((sptSet[j]==false) && (find(OpenTable.begin(), OpenTable.end(), j) == OpenTable.end())) // node j is not in open table and close table; 
 				{
 					dist[j] = dist[current] + get_weight(current, j); 
 					previous[j] = current;
 					OpenTable.push_back(j);	
+					
+					print_SearchTree();
+				    print_OpenTable();
+				    print_CloseTable();	
 				}
 				else if((sptSet[j]==false) && (find(OpenTable.begin(), OpenTable.end(), j) != OpenTable.end())) // node j is in open table; 
 				{
@@ -157,37 +161,21 @@ bool UFS(int source, int goal)
 						previous[j] = current;
 					}
 				}
-				else if(sptSet[j]==true)
+				else if(sptSet[j]==true) // node j is in close table; 
 				{
-					
-				}
-				
-				print_SearchTree();
-				print_OpenTable();
-				print_CloseTable();	
-				
-				/*
-				if((get_weight(current, j) != INT_MAX)&&(sptSet[j]==false))
-				{
-	//				cout<<"Current Node:"<<j<<" "<<endl;
-					
 					if(dist[j] >  dist[current] + get_weight(current, j))
 					{
-						dist[j] = dist[current] + get_weight(current, j); // compute distance from source to j;
+						dist[j] = dist[current] + get_weight(current, j); 
 						previous[j] = current;
-					}
+						OpenTable.push_back(j);
+						sptSet[j] = false; 
 						
-					if(find(OpenTable.begin(), OpenTable.end(), j) == OpenTable.end() )
-					{
-						OpenTable.push_back(j);		
 						print_SearchTree();
-					    print_OpenTable();
-					    print_CloseTable();			
-					}										
-	                
+				        print_OpenTable();
+				        print_CloseTable();	
+					}
 				}
-				
-				*/
+
 			}
 		}
 	}
