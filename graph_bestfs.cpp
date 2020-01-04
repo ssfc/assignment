@@ -38,6 +38,11 @@ void print_CloseTable();
 void print_SearchTree();
 
 
+int h(int n)
+{
+	return n*n; 
+}
+
 int get_weight(int start, int end)
 {
 	return adjacency_matrix[start*num_v + end];
