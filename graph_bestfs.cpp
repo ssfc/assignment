@@ -10,6 +10,7 @@ vector<int> adjacency_matrix;
 vector<bool> sptSet; // sptSet[i] will true if vertex i is included in shortest path tree or shortest distance from src to i is finalized
 vector<int> dist;    // dist[i] will hold the shortest distance from src to i; 
 vector<int> previous;
+
 vector<int> OpenTable;
 vector<int> CloseTable;
 
@@ -20,10 +21,19 @@ struct Node
 	vector<int> child;
 };
 
+struct Path // Path is what is in open table and close table; 
+{
+	vector<int> member; // path node members; 
+	int length; // length of path; 
+};
+
 vector<Node> tree;
 vector<int> sequence;
+vector<Path> OpenTablePath; 
+vector<Path> CloseTablePath;
 
 void print_OpenTable();
+void print_OpenTablePath();
 void print_CloseTable();
 void print_SearchTree();
 
@@ -55,6 +65,23 @@ int get_MinIndex()
 	return min_index;
 }
 
+// get minimum index in the open table path; 
+int get_minPathIndex()
+{
+	int min_distance = INT_MAX;
+	int min_index;
+	
+	for(int i=0;i<OpenTablePath.size();i++)
+	{
+		if(OpenTablePath[i].length < min_distance)
+		{
+			min_distance = OpenTablePath[i].length;
+			min_index = i;
+		}
+	}
+	
+	return min_index; 
+}
 
 // UFS continuous execution;
 bool UFS(int source, int goal)
@@ -75,8 +102,14 @@ bool UFS(int source, int goal)
     sequence.push_back(source);	
 	OpenTable.push_back(source);
 	
+	struct Path temp;
+	temp.length = 0;
+	temp.member.push_back(source);
+	OpenTablePath.push_back(temp);
+	
 	print_SearchTree();
 	print_OpenTable();
+	print_OpenTablePath();
 	print_CloseTable();
 
 	int current = -1;
@@ -132,85 +165,6 @@ bool UFS(int source, int goal)
 	return false;
 }
 
-// UFS step execution;
-bool UFS_step(int source, int goal)
-{
-	// initialize before start; 
-	for (int i=0;i<num_v;i++)
-	{
-        dist[i] = INT_MAX;
-        sptSet[i] = false;
-        previous[i] = -1;
-	}
-	
-	dist[source] = 0;
-	sptSet[source] = true;	
-	tree[source].level = 0;
-	
-//	cout<<"Current Node:"<<i<<" "<<endl;
-    sequence.push_back(source);	
-	OpenTable.push_back(source);
-	
-	print_SearchTree();
-	print_OpenTable();
-	print_CloseTable();
-	cout<<"Press enter to continue: "<<endl;
-	cin.ignore();
-
-	int current = -1;
-	while(!OpenTable.empty())
-	{
-		int min_index = get_MinIndex();
-//		cout<<"Minimum index "<<min_index<<endl; // test whether minimum index is correct; 
-		current = OpenTable[min_index];	
-		
-		if(current==goal)
-		{
-			cout<<"We find goal:"<<current<<" Distance: "<<dist[current]<<endl;
-			print_SearchTree();
-			return true;
-		}
-		
-		
-		sptSet[OpenTable[min_index]] = true;	
-		OpenTable.erase(OpenTable.begin() + min_index);				
-		CloseTable.push_back(current);
-		
-		print_SearchTree();
-		print_OpenTable();
-		print_CloseTable();
-		cout<<"Press enter to continue: "<<endl;
-	    cin.ignore();
-
-		for(int j=0;j<num_v;j++)
-		{
-			if((get_weight(current, j) != INT_MAX)&&(sptSet[j]==false))
-			{
-//				cout<<"Current Node:"<<j<<" "<<endl;
-				
-				if(dist[j] >  dist[current] + get_weight(current, j))
-				{
-					dist[j] = dist[current] + get_weight(current, j); // compute distance from source to j;
-					previous[j] = current;
-				}
-					
-				if(find(OpenTable.begin(), OpenTable.end(), j) == OpenTable.end() )
-				{
-					OpenTable.push_back(j);		
-					print_SearchTree();
-				    print_OpenTable();
-				    print_CloseTable();	
-					cout<<"Press enter to continue: "<<endl;
-	                cin.ignore();		
-				}															
-                
-			}
-		}
-	}
-	
-	cout<<"Not found!"<<endl;
-	return false;
-}
 
 
 void print_OpenTable()
@@ -229,6 +183,29 @@ void print_OpenTable()
 		}
 	}
 	cout<<endl;
+}
+
+
+void print_OpenTablePath()
+{
+	cout<<"Open Table Path:"<<endl;
+	
+	if(OpenTablePath.size()==0)
+	{
+		cout<<"Empty!";
+	}
+	else
+	{
+		for(int i=0;i<OpenTablePath.size();i++)
+		{
+			cout<<"Distance "<<OpenTablePath[i].length<<" Members ";
+			for(int j=0;j<OpenTablePath[i].member.size();j++)
+			{
+				cout<<OpenTablePath[i].member[j]<<" ";
+			}
+			cout<<endl;
+		}
+	}
 }
 
 void print_CloseTable()
@@ -360,8 +337,8 @@ int main()
 	}
 	
 
-//	UFS(0, 5); // UFS continuous execution;	
-	UFS_step(0, 5); //UFS step execution;
+	UFS(0, 5); // UFS continuous execution;	
+//	UFS_step(0, 5); //UFS step execution;
 	
 	// print search tree;
 	cout<<endl;
