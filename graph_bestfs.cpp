@@ -21,27 +21,14 @@ struct Node
 	vector<int> child;
 };
 
-struct Path // Path is what is in open table and close table; 
-{
-	vector<int> member; // path node members; 
-	int length; // length of path; 
-};
 
 vector<Node> tree;
 vector<int> sequence;
-vector<Path> OpenTablePath; 
-vector<Path> CloseTablePath;
 
 void print_OpenTable();
 void print_OpenTablePath();
 void print_CloseTable();
 void print_SearchTree();
-
-
-int h(int n)
-{
-	return n*n; 
-}
 
 int get_weight(int start, int end)
 {
@@ -70,24 +57,6 @@ int get_MinIndex()
 	return min_index;
 }
 
-// get minimum index in the open table path; 
-int get_minPathIndex()
-{
-	int min_distance = INT_MAX;
-	int min_index;
-	
-	for(int i=0;i<OpenTablePath.size();i++)
-	{
-		if(OpenTablePath[i].length < min_distance)
-		{
-			min_distance = OpenTablePath[i].length;
-			min_index = i;
-		}
-	}
-	
-	return min_index; 
-}
-
 // UFS continuous execution;
 bool UFS(int source, int goal)
 {
@@ -107,14 +76,8 @@ bool UFS(int source, int goal)
     sequence.push_back(source);	
 	OpenTable.push_back(source);
 	
-	struct Path temp;
-	temp.length = 0;
-	temp.member.push_back(source);
-	OpenTablePath.push_back(temp);
-	
 	print_SearchTree();
 	print_OpenTable();
-	print_OpenTablePath();
 	print_CloseTable();
 
 	int current = -1;
@@ -122,11 +85,9 @@ bool UFS(int source, int goal)
 	while(!OpenTable.empty())
 	{
 		int min_index = get_MinIndex();
-		int minPathIndex = get_minPathIndex();
 		
 //		cout<<"Minimum index "<<min_index<<endl; // test whether minimum index is correct; 
 		current = OpenTable[min_index];	
-//		currentNode = OpenTablePath[minPathIndex].member[]; /////////////////////////////////////////////////////////
 		
 		if(current==goal)
 		{
@@ -207,29 +168,6 @@ void print_OpenTable()
 		}
 	}
 	cout<<endl;
-}
-
-
-void print_OpenTablePath()
-{
-	cout<<"Open Table Path:"<<endl;
-	
-	if(OpenTablePath.size()==0)
-	{
-		cout<<"Empty!";
-	}
-	else
-	{
-		for(int i=0;i<OpenTablePath.size();i++)
-		{
-			cout<<"Distance "<<OpenTablePath[i].length<<" Members ";
-			for(int j=0;j<OpenTablePath[i].member.size();j++)
-			{
-				cout<<OpenTablePath[i].member[j]<<" ";
-			}
-			cout<<endl;
-		}
-	}
 }
 
 void print_CloseTable()
