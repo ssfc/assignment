@@ -57,8 +57,8 @@ int get_MinIndex()
 	return min_index;
 }
 
-// UFS continuous execution;
-bool UFS(int source, int goal)
+// best first search continuous execution;
+bool BestFS(int source, int goal)
 {
 	// initialize before start; 
 	for (int i=0;i<num_v;i++)
@@ -299,8 +299,8 @@ int main()
 	}
 	
 
-	UFS(0, 5); // UFS continuous execution;	
-//	UFS_step(0, 5); //UFS step execution;
+	BestFS(0, 5); // best first search continuous execution;	
+//	BestFS_step(0, 5); // best first search step execution;
 	
 	// print search tree;
 	cout<<endl;
